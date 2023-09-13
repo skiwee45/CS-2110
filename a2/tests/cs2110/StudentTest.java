@@ -25,8 +25,8 @@ class StudentTest {
 
     @Test
     void testFullName() {
-        // TODO 6: Add a test case for the `fullName()` method.
-        fail("TODO");
+        Student s = new Student("ff", "ll");
+        assertEquals("ff ll", s.fullName());
     }
 
     @Test

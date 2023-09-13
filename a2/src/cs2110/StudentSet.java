@@ -50,29 +50,37 @@ public class StudentSet {
      * Create an empty set of students.
      */
     public StudentSet() {
-        // TODO 9: Implement this constructor according to its specification
         // You will need to decide on an initial capacity for your backing array (the capacity is
         // not observable by the client, so this is not constrained by the method spec).
         // The choice is a tradeoff between potentially wasted space vs. potentially needing to
         // resize the backing array sooner.  Choose something "small," say, less than 20 (the exact
         // value is up to you).  Don't forget to assert that invariants are satisfied (this is the
         // last time we'll remind you).
-        throw new UnsupportedOperationException();
+
+       store = new Student[4];
+       size = 0;
+       assertInv();
     }
 
     /**
      * Return the number of students in this set.
      */
     public int size() {
-        // TODO 10: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     /**
      * Effect: Add student `s` to the set.  Requires `s` is not already in the set.
      */
     public void add(Student s) {
-        // TODO 11: Implement this method according to its specification
+        assert !contains(s) : "already has student";
+        if(size() == store.length) {
+            increaseBackingSize();
+        }
+        store[size()] = s;
+        size++;
+        assertInv();
+
         // If the backing array runs out of space, create a new backing array with twice the
         // capacity and copy all elements from the old array to it.  Consider delegating this task
         // to a helper method.
@@ -86,15 +94,27 @@ public class StudentSet {
         // 4. Implement the resizing logic for `add()`.  Confirm that your new test case passes.
         // If you're not sure how to check a precondition, leave yourself a TODO and move on; you
         // might be inspired by a later task.
-        throw new UnsupportedOperationException();
+    }
+
+    private void increaseBackingSize() {
+        Student[] temp = new Student[store.length * 2];
+        for (int i = 0; i < store.length; i++) {
+            temp[i] = store[i];
+        }
+        store = temp;
+        assertInv();
     }
 
     /**
      * Return whether this set contains student `s`.
      */
     public boolean contains(Student s) {
-        // TODO 12: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        for(Student student : store) {
+            if (s.equals(student)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -102,10 +122,21 @@ public class StudentSet {
      * return false.
      */
     public boolean remove(Student s) {
-        // TODO 13: Implement this method according to its specification
+        if (!contains(s)) {
+            return false;
+        }
+        for (int i = 0; i < size; i++) {
+            if (store[i] == s) {
+                store[i] = store[size() - 1];
+                store[size() - 1] = null;
+                size--;
+                break;
+            }
+        }
+        assertInv();
+        return true;
         // You are welcome to decompose this task into operations that can be performed by
         // "helper methods", which you may define below.
-        throw new UnsupportedOperationException();
     }
 
     /**

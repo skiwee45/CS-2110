@@ -4,31 +4,22 @@ package cs2110;
  * A student tracked by the CMSμ course management system.
  */
 public class Student {
-    // TODO 1: Add fields and write the class invariant.
-    // Declare fields to represent the following pieces of state.  Your fields will hold information
-    // describing each Student.  Make the fields private and include comments describing how each
-    // one relates to the class's state and how their values are constrained (the class invariant).
-    // If fields are never reassigned by the class's methods, they should be declared `final`.
-    // * First name of this Student (may not be empty or null).
-    // * Last name of this Student (may not be empty or null).
-    // * Number of credits student is currently enrolled in (integer; may not be negative).
-    // The number of credits is also involved in an invariant of the `CMSu` class:
-    // it must be equal to the sum of the credits of all Courses this student is enrolled in.  This
-    // invariant cannot be checked or enforced within `Student` itself, but other code in the
-    // package must be aware of it and respect it.
-    // Reminder: You should delete this comment block after completing the TODO.  You are welcome to
-    // borrow text from it when writing your field specifications, however.
+
+    //first name of the student, cannot be null or empty string
+    private String f_name;
+    //last name of the student, cannot be null or empty string
+    private String l_name;
+    //total number of credits that the student is taking, cannot be negative
+    private int credits;
 
 
     /**
      * Assert that this object satisfies its class invariants.
      */
     private void assertInv() {
-        // TODO 2: Implement this method by asserting the invariants you identified above.
-        // In CS 2110, we assume an implicit invariant that fields are not null unless otherwise
-        // specified (as with method preconditions).  It is a good habit to check for this
-        // explicitly.
-        throw new UnsupportedOperationException();
+        assert f_name != null && f_name.isEmpty();
+        assert l_name != null && l_name.isEmpty();
+        assert credits >= 0;
     }
 
     /**

@@ -63,8 +63,21 @@ public class A1 {
      * or equal to it.
      */
     public static int med3(int a, int b, int c) {
-        int[] arr = new int[] {a, b, c};
-        Arrays.sort(arr);
+        int[] arr = new int[]{a, b, c};
+        for (int i = 0; i < 3; i++) {
+            int min = arr[i];
+            int minIndex = i;
+            for (int j = i + 1; j < 3; j++) {
+                if (arr[j] < min) {
+                    min = arr[j];
+                    minIndex = j;
+                }
+            }
+            int temp = arr[i];
+            arr[i] = min;
+            arr[minIndex] = temp;
+        }
+        System.out.println(Arrays.toString(arr));
         return arr[1];
     }
 
@@ -87,7 +100,7 @@ public class A1 {
     public static double estimatePi(int nTerms) {
         double piOverFour = 0;
         double alternating = 1;
-        for (int i = 0; i < nTerms; i++){
+        for (int i = 0; i < nTerms; i++) {
             piOverFour += alternating / (1 + 2 * i);
             alternating *= -1;
         }
@@ -103,7 +116,7 @@ public class A1 {
         // Implementation constraint: Use the `charAt()` and `length()` methods
         // of the `String` class.
         for (int i = 0; i < s.length() / 2; i++) {
-            if(s.charAt(i) != s.charAt(s.length() - i - 1)) {
+            if (s.charAt(i) != s.charAt(s.length() - i - 1)) {
                 return false;
             }
         }
@@ -124,13 +137,8 @@ public class A1 {
      * non-negative.
      */
     public static String formatConfirmation(String orderId, int itemCount) {
-        String plurality;
-        if (itemCount == 1) {
-            plurality = " item.";
-        } else {
-            plurality = " items.";
-        }
-        return "Order '" + orderId + "' contains " + itemCount + plurality;
+        return "Order '" + orderId + "' contains " + itemCount +
+                (itemCount == 1 ? " item." : " items.");
         // TODO: Implement this method according to its specifications.
     }
 
@@ -144,6 +152,7 @@ public class A1 {
         int collatz = collatzSum(med);
         double piApprox = estimatePi(10);
         double area = polygonArea(collatz, piApprox);
-        System.out.printf("The area of a polygon with %d sides of length %f m is %f m^2.", collatz, piApprox, area);
+        System.out.printf("The area of a polygon with %d sides of length %f m is %f m^2.",
+                collatz, piApprox, area);
     }
 }

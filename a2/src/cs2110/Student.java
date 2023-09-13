@@ -6,9 +6,9 @@ package cs2110;
 public class Student {
 
     //first name of the student, cannot be null or empty string
-    private String f_name;
+    private final String f_name;
     //last name of the student, cannot be null or empty string
-    private String l_name;
+    private final String l_name;
     //total number of credits that the student is taking, cannot be negative
     private int credits;
 
@@ -17,8 +17,8 @@ public class Student {
      * Assert that this object satisfies its class invariants.
      */
     private void assertInv() {
-        assert f_name != null && f_name.isEmpty();
-        assert l_name != null && l_name.isEmpty();
+        assert f_name != null && !f_name.isEmpty();
+        assert l_name != null && !l_name.isEmpty();
         assert credits >= 0;
     }
 
@@ -27,7 +27,6 @@ public class Student {
      * for any credits.  Requires firstName and lastName are not empty.
      */
     public Student(String firstName, String lastName) {
-        // TODO 3: Implement this method according to its specification
         // Assert that all preconditions are met.
         // Assert that the class invariant is satisfied before returning.
         // (These two assertions are not, in general, redundant - one pertains to arguments provided
@@ -35,23 +34,26 @@ public class Student {
         // Note: If a field's initial value is independent of constructor arguments, it is legal to
         // initialize it when it is declared (or even to rely on a default value), but prefer to
         // assign it in the constructor so that the whole state is initialized in one place.
-        throw new UnsupportedOperationException();
+        assert firstName != null && !firstName.isEmpty();
+        assert lastName != null && !lastName.isEmpty();
+        f_name = firstName;
+        l_name = lastName;
+        credits = 0;
+        assertInv();
     }
 
     /**
      * Return the first name of this Student.  Will not be empty.
      */
     public String firstName() {
-        // TODO 4A: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        return f_name;
     }
 
     /**
      * Return the last name of this Student.  Will not be empty.
      */
     public String lastName() {
-        // TODO 4B: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        return l_name;
     }
 
     /**
@@ -68,8 +70,7 @@ public class Student {
      * Return the number of credits this student is currently enrolled in.  Will not be negative.
      */
     public int credits() {
-        // TODO 5: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        return credits;
     }
 
     /**
@@ -80,12 +81,9 @@ public class Student {
      * negative.
      */
     void adjustCredits(int deltaCredits) {
-        // This method has default visibility to prevent code in other packages from directly
-        // adjusting a student's credits.
-        // TODO 7: Implement this method according to its specification
-        // Assert that all preconditions are met.
-        // Assert that the class invariant is satisfied before returning.
-        throw new UnsupportedOperationException();
+        assert credits + deltaCredits >= 0 : " negative credits";
+        credits += deltaCredits;
+        assertInv();
     }
 
     /**

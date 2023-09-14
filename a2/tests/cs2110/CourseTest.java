@@ -16,7 +16,8 @@ class CourseTest {
         assertEquals("12:45 PM", test.formatStartTime());
     }
 
-    @Test void testOverlap() {
+    @Test
+    void testOverlap() {
         Course test1 = new Course("title", 4, "ray", "cornell", 12, 45, 60);
         Course test2 = new Course("title", 4, "ray", "cornell", 13, 45, 60);
         Course test3 = new Course("title", 4, "ray", "cornell", 13, 15, 60);

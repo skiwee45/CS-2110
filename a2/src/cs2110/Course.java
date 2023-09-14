@@ -9,41 +9,41 @@ public class Course {
     /**
      * Set of all students enrolled in this Course.
      */
-    private StudentSet students;
+    private final StudentSet students;
 
     /**
      * The title of this course (e.g. Object-Oriented Programming and Data Structures).  Must be
      * non-empty.
      */
-    private String title;
+    private final String title;
 
     /**
      * Number of credit hours students will receive upon completing this course.  Must be
      * non-negative.
      */
-    private int credits;
+    private final int credits;
 
     /**
      * The last name of the professor of this course (e.g. Myers).  Must be non-empty.
      */
-    private String prof;
+    private final String prof;
 
     /**
      * The location of lectures at this course (e.g. Statler Hall room 185).  Must be non-empty.
      */
-    private String location;
+    private final String location;
 
     /**
      * The start time of this course's daily meetings, expressed as the number of minutes after
      * midnight.  Must be between 0 and 1439, inclusive.
      */
-    private int startTimeMin;
+    private final int startTimeMin;
 
     /**
      * The duration of this course's daily meetings, in minutes.  Must be positive, and
      * `startTimeMin + durationMin` must be no greater than 1440.
      */
-    private int durationMin;
+    private final int durationMin;
 
     /**
      * Assert that this object satisfies its class invariants.
@@ -67,7 +67,7 @@ public class Course {
      * than midnight.
      */
     public Course(String title, int credits, String profName, String location,
-            int startHr, int startMin, int duration) {
+                  int startHr, int startMin, int duration) {
         this.students = new StudentSet();
         this.title = title;
         this.credits = credits;

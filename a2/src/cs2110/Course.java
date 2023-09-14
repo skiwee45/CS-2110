@@ -49,8 +49,12 @@ public class Course {
      * Assert that this object satisfies its class invariants.
      */
     private void assertInv() {
-        // TODO 15: Implement this method by asserting the invariants specified above.
-        throw new UnsupportedOperationException();
+        assert title != null && !title.isEmpty();
+        assert credits >= 0;
+        assert prof != null && !prof.isEmpty();
+        assert location != null && !location.isEmpty();
+        assert startTimeMin >= 0 && startTimeMin <= 1439;
+        assert durationMin > 0 && (startTimeMin + durationMin) <= 1440;
     }
 
     /**
@@ -64,11 +68,17 @@ public class Course {
      */
     public Course(String title, int credits, String profName, String location,
             int startHr, int startMin, int duration) {
-        // TODO 16: Implement this constructor according to its specification
+        this.students = new StudentSet();
+        this.title = title;
+        this.credits = credits;
+        this.prof = profName;
+        this.location = location;
+        this.startTimeMin = startHr * 60 + startMin;
+        this.durationMin = duration;
+        assertInv();
         // Note that the constructor has separate parameters for `startHr` and `startMin`, but the
         // class state only has a field for `startTimeMin`; the constructor should convert between
         // these representations.
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -97,8 +107,7 @@ public class Course {
      * (separated by a space).
      */
     public String instructor() {
-        // TODO 17
-        throw new UnsupportedOperationException();
+        return "Professor " + prof;
     }
 
     /**
@@ -107,8 +116,12 @@ public class Course {
      * necessary.
      */
     public String formatStartTime() {
-        // TODO 18
-        throw new UnsupportedOperationException();
+        int hour = startTimeMin / 60;
+        int min = startTimeMin % 60;
+        int displayHour = hour % 12;
+        String am_pm = hour == displayHour ? "AM" : "PM";
+        displayHour = displayHour == 0 ? 12 : displayHour;
+        return String.format("%02d:%02d " + am_pm, displayHour, min);
     }
 
     /**
@@ -122,16 +135,21 @@ public class Course {
      * </ul>
      */
     public boolean overlaps(Course course) {
-        // TODO 19
-        throw new UnsupportedOperationException();
+        int startMin1 = startTimeMin;
+        int endMin1 = startMin1 + durationMin;
+        int startMin2 = course.startTimeMin;
+        int endMin2 = startMin2 + course.durationMin;
+
+        return (startMin1 < endMin2 && startMin1 > startMin2) ||
+                (endMin1 < endMin2 && endMin1 > startMin2) ||
+                (startMin1 < startMin2 && endMin1 > endMin2);
     }
 
     /**
      * Return whether `student` is enrolled in this course.
      */
     public boolean hasStudent(Student student) {
-        // TODO 20
-        throw new UnsupportedOperationException();
+        return students.contains(student);
     }
 
     /**
@@ -139,8 +157,13 @@ public class Course {
      * count accordingly.  Return whether this causes a change in the enrollment of the course.
      */
     public boolean enrollStudent(Student student) {
-        // TODO 21
-        throw new UnsupportedOperationException();
+        if (hasStudent(student)) {
+            return false;
+        }
+        students.add(student);
+        student.adjustCredits(credits());
+        assertInv();
+        return true;
     }
 
     /**
@@ -149,8 +172,13 @@ public class Course {
      * course.
      */
     public boolean dropStudent(Student s) {
-        // TODO 22
-        throw new UnsupportedOperationException();
+        if (!hasStudent(s)) {
+            return false;
+        }
+        students.remove(s);
+        s.adjustCredits(-credits());
+        assertInv();
+        return true;
     }
 
     /**

@@ -5,7 +5,7 @@ import java.io.PrintStream;
 /*
  * Assignment metadata
  * Name and NetID: Raymond Lin (rpl67)
- * Hours spent on assignment: 4
+ * Hours spent on assignment: 5
  */
 
 /**
@@ -18,7 +18,7 @@ public class CMSu {
      * course in the array is used as unique public identifier.  Only the first `nCourses` elements
      * are valid; remaining elements are null.
      */
-    private Course[] courses;
+    private final Course[] courses;
 
     /**
      * Number of courses in `courses`.
@@ -34,7 +34,7 @@ public class CMSu {
      * of all Courses that student is enrolled in.  All code in this package must respect this
      * invariant for students managed by a `CMSu`.
      */
-    private Student[] students;
+    private final Student[] students;
 
     /**
      * Number of students in `students`.
@@ -139,8 +139,22 @@ public class CMSu {
      * times.
      */
     public boolean hasConflict(Student student) {
-        // TODO 24: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        Course[] studentCourses = new Course[100];
+        int counter = 0;
+        for (int i = 0; i < nCourses; i++) {
+            Course c = courses[i];
+            if (c.hasStudent(student)) {
+                for (int j = 0; j < counter; j++) {
+                    boolean isOverlapping = studentCourses[j].overlaps(c);
+                    if (isOverlapping) {
+                        return true;
+                    }
+                }
+                studentCourses[counter] = c;
+                counter++;
+            }
+        }
+        return false;
     }
 
     /**
@@ -148,8 +162,14 @@ public class CMSu {
      * credits.
      */
     public StudentSet auditCredits(int creditLimit) {
-        // TODO 25: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        StudentSet output = new StudentSet();
+        for (int i = 0; i < nStudents; i++) {
+            Student s = students[i];
+            if (s.credits() > creditLimit) {
+                output.add(s);
+            }
+        }
+        return output;
     }
 
     /**
@@ -160,8 +180,21 @@ public class CMSu {
      * students may be violated (in which case this returns false).
      */
     public boolean checkCreditConsistency() {
-        // TODO 26: Implement this method according to its specification
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < nStudents; i++) {
+            Student s = students[i];
+            int courseCredits = 0;
+            for (int j = 0; j < nCourses; j++) {
+                Course c = courses[j];
+                if (c.hasStudent(s)) {
+                    courseCredits += c.credits();
+                }
+            }
+            if (courseCredits != s.credits()) {
+                return false;
+            }
+
+        }
+        return true;
     }
 
 }

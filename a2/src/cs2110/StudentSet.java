@@ -57,9 +57,9 @@ public class StudentSet {
         // value is up to you).  Don't forget to assert that invariants are satisfied (this is the
         // last time we'll remind you).
 
-       store = new Student[4];
-       size = 0;
-       assertInv();
+        store = new Student[4];
+        size = 0;
+        assertInv();
     }
 
     /**
@@ -74,7 +74,7 @@ public class StudentSet {
      */
     public void add(Student s) {
         assert !contains(s) : "already has student";
-        if(size() == store.length) {
+        if (size() == store.length) {
             increaseBackingSize();
         }
         store[size()] = s;
@@ -109,7 +109,7 @@ public class StudentSet {
      * Return whether this set contains student `s`.
      */
     public boolean contains(Student s) {
-        for(Student student : store) {
+        for (Student student : store) {
             if (s.equals(student)) {
                 return true;
             }

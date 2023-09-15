@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         Main app = new Main();
         if (args.length > 0) {
-            File file = new File("tests", args[0]);
+            File file = new File("a2/tests", args[0]);
             try {
                 app.processCommands(new Scanner(file), true);
             } catch (FileNotFoundException e) {

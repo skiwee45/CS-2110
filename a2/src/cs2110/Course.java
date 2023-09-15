@@ -121,7 +121,7 @@ public class Course {
         int displayHour = hour % 12;
         String am_pm = hour == displayHour ? "AM" : "PM";
         displayHour = displayHour == 0 ? 12 : displayHour;
-        return String.format("%02d:%02d " + am_pm, displayHour, min);
+        return String.format("%2d:%02d " + am_pm, displayHour, min);
     }
 
     /**

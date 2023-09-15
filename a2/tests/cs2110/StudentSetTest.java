@@ -37,9 +37,10 @@ class StudentSetTest {
                 Student b = new Student("B" + i, "BB");
                 students.add(b);
             }
-            students.remove(a);
-            assertEquals(false, students.contains(a));
+            assertTrue(students.remove(a));
+            assertFalse(students.contains(a));
             assertEquals(10, students.size());
+            assertFalse(students.remove(a));
         }
     }
 

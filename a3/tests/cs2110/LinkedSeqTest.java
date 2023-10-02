@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class LinkedSeqTest {
 
@@ -96,6 +97,68 @@ class LinkedSeqTest {
 
         list = makeList3();
         assertEquals("[A, B, C]", list.toString());
+    }
+
+    @Test
+    void testContains() {
+        Seq<String> list = makeList3();
+        assertTrue(list.contains("C"));
+        assertFalse(list.contains("D"));
+        list.prepend("C");
+        assertTrue(list.contains("C"));
+    }
+
+    @Test
+    void testGet() {
+        Seq<String> list = makeList3();
+        assertEquals("A", list.get(0));
+        assertEquals("B", list.get(1));
+        assertEquals("C", list.get(2));
+    }
+
+    @Test
+    void testAppend() {
+        Seq<String> list = makeList0();
+        list.append("A");
+        list.append("B");
+        list.append("C");
+        assertEquals(makeList3().toString(), list.toString());
+    }
+
+    @Test
+    void testInsertBefore() {
+        Seq<String> list = makeList3();
+        list.insertBefore("D", "A");
+        list.insertBefore("E", "B");
+        list.insertBefore("F", "C");
+        assertEquals("[D, A, E, B, F, C]", list.toString());
+    }
+
+    @Test
+    void testRemove() {
+        Seq<String> list = makeList3();
+        assertFalse(list.remove("D"));
+        list.append("B");
+        assertTrue(list.remove("B"));
+        assertTrue(list.remove("C"));
+        assertTrue(list.remove("B"));
+        assertTrue(list.remove("A"));
+        assertEquals("[]", list.toString());
+    }
+
+    @Test
+    void testEquals() {
+        Seq<String> list1 = makeList3();
+        Seq<String> list2 = makeList2();
+        Seq<String> list3 = makeList0();
+        assertNotEquals(list1, list2);
+        assertNotEquals(list1, list3);
+        assertNotEquals(list2, list3);
+        list1.remove("C");
+        assertEquals(list1, list2);
+        list1.remove("B");
+        list1.remove("A");
+        assertEquals(list1, list3);
     }
 
     // TODO: Add new test cases here as you implement each method in `LinkedSeq`.  You may combine

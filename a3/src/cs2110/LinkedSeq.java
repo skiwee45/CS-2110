@@ -5,8 +5,8 @@ import java.util.NoSuchElementException;
 
 /*
  * Assignment metadata
- * Name(s) and NetID(s): TODO (TODO)
- * Hours spent on assignment: TODO
+ * Name(s) and NetID(s): Raymond (rpl67)
+ * Hours spent on assignment: 2
  */
 
 /**
@@ -45,6 +45,14 @@ public class LinkedSeq<T> implements Seq<T> {
 
             // TODO 0: check that the number of linked nodes is equal to this list's size and that
             // the last linked node is the same object as `tail`.
+            int actualSize = 1;
+            Node<T> temp = head;
+            while(temp.next() != null) {
+                temp = temp.next();
+                actualSize++;
+            }
+            assert actualSize == size;
+            assert temp.equals(tail);
         }
     }
 
@@ -93,11 +101,21 @@ public class LinkedSeq<T> implements Seq<T> {
      */
     @Override
     public String toString() {
-        String str = "[";
+        if (head == null) {
+            return "[]";
+        }
+        StringBuilder str = new StringBuilder("[");
+        Node<T> temp = head;
+        while(temp != tail) {
+            str.append(temp.data().toString());
+            str.append(", ");
+            temp = temp.next();
+        }
+        str.append(temp.data().toString());
         // TODO 1: Complete the implementation of this method according to its specification.
         // Unit tests have already been provided (you do not need to add additional cases).
-        str += "]";
-        return str;
+        str.append("]");
+        return str.toString();
     }
 
     @Override
@@ -105,40 +123,114 @@ public class LinkedSeq<T> implements Seq<T> {
         // TODO 2: Write unit tests for this method, then implement it according to its
         // specification.  Tests must check for `elem` in a list that does not contain `elem`, in a
         // list that contains it once, and in a list that contains it more than once.
-        throw new UnsupportedOperationException();
+
+        Node<T> temp = head;
+        while(temp != null) {
+            if (elem.equals(temp.data())) {
+                return true;
+            }
+            temp = temp.next();
+        }
+        return false;
     }
 
     @Override
     public T get(int index) {
+        assert index < size();
+
+        int i = 0;
+        Node<T> temp = head;
+        while (i < index) {
+            temp = temp.next();
+            i++;
+        }
+        return temp.data();
         // TODO 3: Write unit tests for this method, then implement it according to its
         // specification.  Tests must get elements from at least three different indices.
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void append(T elem) {
+        Node<T> temp = new Node<>(elem, null);
+        if (head == null) {
+            head = temp;
+            tail = temp;
+        } else {
+            tail.setNext(temp);
+            tail = temp;
+        }
+        size++;
+        assertInv();
         // TODO 4: Write unit tests for this method, then implement it according to its
         // specification.  Tests must append to lists of at least three different sizes.
         // Implementation constraint: efficiency must not depend on the size of the list.
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void insertBefore(T elem, T successor) {
+        Node<T> temp = new Node<>(elem, null);
+        if (head.data().equals(successor)) {
+            temp.setNext(head);
+            head = temp;
+        } else {
+            Node<T> it = head;
+            while (!it.next().data().equals(successor)) {
+                it = it.next();
+            }
+            temp.setNext(it.next());
+            it.setNext(temp);
+        }
+        size++;
+        assertInv();
+
         // Tip: Since there is a precondition that `successor` is in the list, you don't have to
         // handle the case of the empty list.  Asserting this precondition is optional.
         // TODO 5: Write unit tests for this method, then implement it according to its
         // specification.  Tests must insert into lists where `successor` is in at least three
         // different positions.
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(T elem) {
+        if (head == null) {
+            return false;
+        }
+
+        if (head.data().equals(elem)) {
+            if (tail == head) {
+                head = null;
+                tail = null;
+            } else {
+                head = head.next();
+            }
+            size--;
+            assertInv();
+            return true;
+        }
+
+        boolean found = false;
+        Node<T> temp = head;
+        while (temp.next() != null) {
+            if (temp.next().data().equals(elem)) {
+                found = true;
+                break;
+            }
+            temp = temp.next();
+        }
+        if (found) {
+            temp.setNext(temp.next().next());
+            if (temp.next() == null) {
+                tail = temp;
+            }
+            size--;
+            assertInv();
+            return true;
+        }
+        assertInv();
+        return false;
         // TODO 6: Write unit tests for this method, then implement it according to its
         // specification.  Tests must remove `elem` from a list that does not contain `elem`, from a
         // list that contains it once, and from a list that contains it more than once.
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -161,9 +253,18 @@ public class LinkedSeq<T> implements Seq<T> {
         Node<T> currNodeThis = head;
         Node currNodeOther = otherSeq.head;
 
+        while(currNodeThis != null) {
+            if (currNodeOther == null || !currNodeThis.data().equals(currNodeOther.data())) {
+                return false;
+            }
+            currNodeThis = currNodeThis.next();
+            currNodeOther = currNodeOther.next();
+        }
+        return currNodeOther == null;
+
+
         // TODO 7: Write unit tests for this method, then finish implementing it according to its
         // specification.  Tests must compare at least three different pairs of lists.
-        throw new UnsupportedOperationException();
     }
 
     /*

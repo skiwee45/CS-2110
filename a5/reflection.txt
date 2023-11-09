@@ -2,10 +2,9 @@
 
 ## Submitter metadata
 
-Partner 1: Firstname Lastname (NetID)  - TODO
-Partner 2: Firstname Lastname (NetID)  - delete if working solo
+Partner 1: Raymond Lin (rpl67)
 
-Hours spent working on this assignment: 0.0  - TODO
+Hours spent working on this assignment: 2
 
 ## Verification questions
 
@@ -14,22 +13,23 @@ Hours spent working on this assignment: 0.0  - TODO
    shown in your error dialog?  (note: answers will vary depending on your
    operating system).
 
-   Answer: TODO
+   Answer: FileNotFoundException
+   FileName.txt (The process cannot access the file because it is being used by another process)
 
 ## Reflection questions
 
 1. Which of the Swing tutorial pages did you find the most interesting and/or
    helpful while implementing your graphical application?
 
-   Answer: TODO
+   Answer: JFileChooser, because that was the most confusing component in the project
 
 2. Are you aware of any areas where your submission is not working as intended?
    If so, describe the issue and what you did to try to diagnose it.  Otherwise,
    describe how you verified that your submission fulfilled its requirements.
 
-   Answer: TODO
+   Answer: I tested it multiple times and saved to various files, as well as playing the game multiple times
 
 3. Did you embellish your program in any way?  If so, describe your changes /
    improvements.
 
-   Answer: TODO
+   Answer: Unfortunately not

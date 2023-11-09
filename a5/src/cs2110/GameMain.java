@@ -1,19 +1,13 @@
 package cs2110;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.*;
 import java.util.Hashtable;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Main class for Click-a-Dot game. Creates window with game board, score label, start button, and
@@ -55,6 +49,7 @@ public class GameMain {
         JLabel scoreLabel = new JLabel("Score: " + game.getScore(),
                 SwingConstants.CENTER);
         scoreLabel.setFont(scoreLabel.getFont().deriveFont(24.0f));
+        frame.add(scoreLabel, BorderLayout.PAGE_START);
         // TODO 1: Add `scoreLabel` to top of frame.
         // See the BorderLayout tutorial [1] for example code that you can adapt.
         // [1]: https://docs.oracle.com/javase/tutorial/uiswing/layout/border.html
@@ -62,6 +57,7 @@ public class GameMain {
         // Create and add start button.
         JButton startButton = new JButton("Start");
         startButton.setFont(startButton.getFont().deriveFont(20.0f));
+        frame.add(startButton, BorderLayout.PAGE_END);
         // TODO 2: Add `startButton` to bottom of frame.
 
         // Create and add vertical size slider.
@@ -85,6 +81,15 @@ public class GameMain {
         // Add menu bar
         JMenuItem saveItem = new JMenuItem("Save score");
         JMenuItem exitItem = new JMenuItem("Exit");
+
+        JMenuBar bar = new JMenuBar();
+
+        JMenu menu = new JMenu("File");
+        menu.add(saveItem);
+        menu.add(exitItem);
+
+        bar.add(menu);
+        frame.setJMenuBar(bar);
         // TODO 14: Add a menu bar with a "File" menu to the frame. The
         // menu items `saveItem` and `exitItem` should be accessible under the
         // "File" menu. See the Menu tutorial [1] for example code you can adapt.
@@ -97,18 +102,21 @@ public class GameMain {
         ////////////////
 
         // When the start button is clicked, start a new game.
+        startButton.addActionListener(e -> game.startGame());
         // TODO 3: Add an ActionListener to `startButton` that starts a game.
         // - For how to add an ActionListener to a button using a lambda (an
         // anonymous function), see the demo code from the GUI lectures.
         // - For how to start a game, review the methods of GameComponent.
 
         // When the game's score changes, update the score label.
+        game.addPropertyChangeListener("GameScore", e -> scoreLabel.setText("Score: " + game.getScore()));
         // TODO 9: Add a PropertyChangeListener to `game` that updates
         // `scoreLabel`'s text whenever the "GameScore" property changes.
         // The label text should start with "Score: ", followed by the numerical
         // score.
 
         // When size slider is adjusted, update target radius in game.
+        sizeSlider.addChangeListener(e -> game.setTargetRadius(sizeSlider.getValue()));
         // TODO 10: Add a ChangeListener to `sizeSlider` that sets the game's
         // target radius to the slider's current value.
         // Method `JSlider.getValue()` gets the slider's current value.
@@ -116,6 +124,7 @@ public class GameMain {
         // https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/javax/swing/JSlider.html
 
         // When speed slider is adjusted, update target duration in game.
+        speedSlider.addChangeListener(e -> game.setTargetTimeMillis(speedSlider.getValue()));
         // TODO 11: Add a ChangeListener to `speedSlider` that sets the game's
         // target duration to the slider's current value.
 
@@ -146,8 +155,13 @@ public class GameMain {
      * Label `slider`'s minimum value with `minLabel` and its maximum value with `maxLabel`.
      */
     private static void addSliderLabels(JSlider slider, String minLabel,
-            String maxLabel) {
+                                        String maxLabel) {
         Hashtable<Integer, JLabel> labels = new Hashtable<>();
+        labels.put(slider.getMinimum(), new JLabel(minLabel));
+        labels.put(slider.getMaximum(), new JLabel(maxLabel));
+        slider.setLabelTable(labels);
+        slider.setPaintLabels(true);
+
         // TODO 12:
         // 1. Put a mapping in dictionary `labels`. The key for the mapping should be the slider's
         // minimum value, which
@@ -160,13 +174,18 @@ public class GameMain {
         // for example code that you can adapt. Look under the heading "Customizing Labels on a
         // Slider".
         // [1] https://docs.oracle.com/javase/tutorial/uiswing/components/slider.html
-
     }
 
     /**
      * Place `slider` in a new padded panel with top label `title` and return the panel.
      */
     private static JComponent makeSliderPanel(JSlider slider, String title) {
+        JPanel pane = new JPanel(new BorderLayout());
+        pane.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        JLabel sliderTitle = new JLabel(title);
+        sliderTitle.setFont(sliderTitle.getFont().deriveFont(16.0f));
+        pane.add(sliderTitle, BorderLayout.PAGE_START);
+        pane.add(slider);
         // TODO 13:
         // 1. Construct a new JPanel with a BorderLayout manager. See the JPanel tutorial [1] under
         // the
@@ -185,7 +204,7 @@ public class GameMain {
         // [2]:
         // https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/javax/swing/BorderFactory.html
         // [3]: https://docs.oracle.com/javase/tutorial/uiswing/components/border.html
-        return slider;  // Replace this line with one that returns your panel
+        return pane;  // Replace this line with one that returns your panel
     }
 
     /**
@@ -193,6 +212,15 @@ public class GameMain {
      * dialogs. Show an error dialog if a problem occurs when writing the file.
      */
     private static void saveScore(JFrame frame, int score) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.showOpenDialog(frame);
+        File saveFile = fileChooser.getSelectedFile();
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(saveFile, true)))) {
+            out.println(score);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(frame, e.getClass().getName() + "\n" + e.getMessage(),
+                    e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        }
         // TODO 15:
         // * Show a "save file" dialog [1].
         // * If the user selects a file, write the value in `score` on a new

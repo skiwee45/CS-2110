@@ -1,7 +1,6 @@
 package cs2110;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -103,6 +102,17 @@ public class GameComponent extends JPanel implements MouseListener {
      * count, and requests a repaint.
      */
     private void timeout() {
+        if (!isActive) {
+            return;
+        }
+
+        if (targetCount >= maxTargets) {
+            stopGame();
+        }
+
+        target.respawn(getWidth(), getHeight());
+        targetCount += 1;
+        repaint();
         // TODO 5: Implement this method according to its specification.
 
     }
@@ -169,6 +179,13 @@ public class GameComponent extends JPanel implements MouseListener {
         // Paint the default background. Keep this as the first line of the method.
         super.paintComponent(g);
 
+        if (isActive) {
+            target.paintDot(g);
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(getX(), getY(), getWidth(), getHeight());
+        }
+
         // TODO 4: Implement this method according to its specification.
         // Use these classes and methods: Graphics.setColor, Graphics.fillRect [1]; Color [2]
         // [1]:
@@ -184,6 +201,20 @@ public class GameComponent extends JPanel implements MouseListener {
      */
     @Override
     public void mousePressed(MouseEvent e) {
+        if (!isActive) {
+            return;
+        }
+
+
+        int relativeX = e.getX() - getTargetRadius();
+        int relativeY = e.getY() - getTargetRadius();
+        boolean hit = target.checkHit(relativeX, relativeY);
+        if (hit) {
+            setScore(getScore() + 1);
+
+            repaint();
+        }
+        System.out.println(score);
         // TODO 8: Implement this method according to its specifications.
         // The X and Y coordinates of the mouse press can be found using `MouseEvent.getX` and
         // `.getY`. [1]
@@ -250,6 +281,13 @@ public class GameComponent extends JPanel implements MouseListener {
          * our current position. Circle is filled red if we have been hit, otherwise blue.
          */
         void paintDot(Graphics g) {
+            if (isHit) {
+                g.setColor(Color.RED);
+            } else {
+                g.setColor(Color.BLUE);
+            }
+
+            g.fillOval(x, y, radius * 2, radius * 2);
             // TODO 6: Implement this method according to its specifications.
             // Use these classes and methods: Graphics.setColor, Graphics.fillOval [1]; Color [2].
             // [1]:
@@ -291,10 +329,21 @@ public class GameComponent extends JPanel implements MouseListener {
          * circular area and it was not already "hit"; return false otherwise.
          */
         boolean checkHit(int cx, int cy) {
+            if (isHit) {
+                return false;
+            }
+
+            double distance = Math.sqrt(Math.pow((cx - x), 2) + Math.pow((cy - y), 2));
+
+            if (distance <= radius) {
+                isHit = true;
+                return true;
+            }
+
+            return false;
             // TODO 7: Implement this method according to its specifications. Delete the
             // `throw` statement and replace it with your own implementation.
             // No Swing methods are needed, just high-school geometry.
-            throw new UnsupportedOperationException("Unimplemented: checkHit");
         }
     }
 }
